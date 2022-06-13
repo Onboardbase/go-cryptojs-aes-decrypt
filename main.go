@@ -1,7 +1,8 @@
 package main
 
-import "github.com/limistah/go_cryptojs_aes_decrypt/decrypt"
+import "fmt"
 
 func main() {
-	cryptojs_aes_decrypt.Decrypt("", "")
+	// cryptojs_aes_decrypt.Decrypt("", "")
+	fmt.Print("Hello World")
 }
