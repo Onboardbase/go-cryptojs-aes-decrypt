@@ -1,3 +1,3 @@
-module github.com/limistah/go-cryptojs-aes-decrypt
+module github.com/Onboardbase/go-cryptojs-aes-decrypt
 
 go 1.18
