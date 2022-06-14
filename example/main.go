@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	aesdecrypt "github.com/limistah/go-cryptojs-aes-decrypt/decrypt"
+	aesdecrypt "github.com/Onboardbase/go-cryptojs-aes-decrypt/decrypt"
 )
 
 func main () {
