@@ -1,4 +1,4 @@
-package aesdecrypt
+package decrypt
 
 import (
 	"crypto/aes"
@@ -16,15 +16,17 @@ func getMD5Hash(text string) []byte {
 	hash := md5.Sum([]byte(text))
 	return hash[:]
 }
-func bytesToKey(data []byte, salt []byte, output int32) []byte {
+func bytesToKey(data []byte, salt []byte, output int32) (finalOutput []byte) {
 	merged := string(data) + string(salt)
 	output = 48
 	finalKey := getMD5Hash(merged)
+	key := finalKey
 	for len(finalKey) < int(output) {
-		key := getMD5Hash(string(finalKey) + merged)
+		key = getMD5Hash(string(key) + merged)
 		finalKey = []byte(string(finalKey) + string(key))
 	}
-	return finalKey[0:output]
+	finalOutput = finalKey[0:output]
+	return 
 }
 
 func parseSecrets(ciphertext string, passcode string) string {
@@ -40,21 +42,20 @@ func parseSecrets(ciphertext string, passcode string) string {
 	keyIv := bytesToKey([]byte(passcode), salt, 48)
 	key := keyIv[:32]
 	iv := keyIv[32:]
-
-	return string(decrypt(key, decodedText[16:], iv))
+	plain := decrypt(key, decodedText[16:], iv)
+	return string(plain)
 }
 
 func decrypt(key []byte, ciphertext []byte, iv []byte) []byte {
-
-	newCipher, _ := aes.NewCipher([]byte(key))
+	newCipher, _ := aes.NewCipher(key)
 	cfbdec := cipher.NewCBCDecrypter(newCipher, iv)
 	decipher := make([]byte, len(ciphertext))
 	cfbdec.CryptBlocks(decipher, ciphertext)
-	decipher = removeBadPadding(decipher)
+	decipher = PKCS5UnPadding(decipher)
 	return decipher
 }
 
-func removeBadPadding(b64 []byte) []byte {
+func PKCS5UnPadding(b64 []byte) []byte {
 	last := b64[len(b64)-1]
 	if last > 16 {
 		return b64
