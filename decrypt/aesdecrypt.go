@@ -5,10 +5,10 @@ import (
 	"crypto/cipher"
 	"crypto/md5"
 	"encoding/base64"
-	"log"
+	"fmt"
 )
 
-func Run(secret string, passphrase string) string {
+func Run(secret string, passphrase string) (string, error) {
 	return parseSecrets(secret, passphrase)
 }
 
@@ -29,21 +29,21 @@ func bytesToKey(data []byte, salt []byte, output int32) (finalOutput []byte) {
 	return 
 }
 
-func parseSecrets(ciphertext string, passcode string) string {
+func parseSecrets(ciphertext string, passcode string) (string, error) {
 	decodedText, err := base64.StdEncoding.DecodeString(ciphertext)
 	if err != nil {
-		log.Fatal("error:", err)
+		return "", err
 	}
 	salted := decodedText[0:8]
 	if string(salted) != "Salted__" {
-		log.Fatal("error:", "Invalid encrypted data")
+		return "", fmt.Errorf("invalid encrypted data")
 	}
 	salt := decodedText[8:16]
 	keyIv := bytesToKey([]byte(passcode), salt, 48)
 	key := keyIv[:32]
 	iv := keyIv[32:]
 	plain := decrypt(key, decodedText[16:], iv)
-	return string(plain)
+	return string(plain), nil
 }
 
 func decrypt(key []byte, ciphertext []byte, iv []byte) []byte {

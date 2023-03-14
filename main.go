@@ -6,16 +6,14 @@ import (
 	aesdecrypt "github.com/Onboardbase/go-cryptojs-aes-decrypt/decrypt"
 )
 
-// aesdecrypt "github.com/limistah/go-cryptojs-aes-decrypt/decrypt"
-
 func main () {
 	cipher := "U2FsdGVkX1/cJw+ISoZKbICgFmoJ+Ehx/atOTgPlt4IOCpmgrHJBY9J2gvoupPbNQs3dHsshX2EljZPlnVLATRJRyF8rOMui+uFMl8DV9I0VVA+1IqecvcP+a2gswGSjYEOiEG9kKQQ8cNlZPtGZdD4ksxxKxm/DhDxquzYX9mWwtMLe0EVYqFd0gncHX2wYzOrvKbMLZlGn/rN70XC+kQgEd47syLFOBm/cjzmVFGvymJfvuRNDl66PRzMtoGqZkQ7uufZuFS3rRUpcsiVv+0XbkSTiaZeD2t7cs+pn4G4uAymMJathk2z2pmhhd184rnXpuooaz8pXPmfdL8CwbQ=="
 
 	
     // The passphrase that generated the cipher above
     passphrase := "passcode"
-	decrypted := aesdecrypt.Run(cipher, passphrase)
-	fmt.Println(decrypted)
+	decrypted, err := aesdecrypt.Run(cipher, passphrase)
+	fmt.Println(decrypted, err)
 	// var data interface{}
 	// err := json.Unmarshal([]byte(decrypted), &data)
 	// fmt.Println(data)
